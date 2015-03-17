@@ -25,7 +25,7 @@
 
 
 
-  <title> 折腾Hexo第一天 // hgy's notes </title>
+  <title> 破解360手机助手 // hgy's notes </title>
 </head>
 
 <body>
@@ -96,7 +96,7 @@
           
           
             
-              折腾Hexo第一天
+              破解360手机助手
             
           
         </h1>
@@ -105,15 +105,15 @@
       <div class="post-meta">
           <span class="post-time">
             
-              发表于 2015-03-04
+              发表于 2015-03-10
             
           </span>
         
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2015/03/04/hexo-first-day/#comments" >
-              <span class="post-comments-count ds-thread-count" data-thread-key="2015/03/04/hexo-first-day/"></span>
+            <a href="/2015/03/10/hack-360/#comments" >
+              <span class="post-comments-count ds-thread-count" data-thread-key="2015/03/10/hack-360/"></span>
             </a>
           </span>
           
@@ -128,18 +128,13 @@
         
 
         
-          <h2 id="安装">安装</h2><p>务必按照官方网站说明来：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo npm install -g hexo-cli</span><br></pre></td></tr></table></figure></p>
-<p>如果运行了如下命令:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g hexo</span><br></pre></td></tr></table></figure></p>
-<p>在deploy时我遇到了报错。</p>
-<p>解决方法：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo rm <span class="operator">-f</span> /usr/<span class="built_in">local</span>/bin/hexo</span><br><span class="line">sudo npm install -g hexo-cli</span><br></pre></td></tr></table></figure></p>
-<a id="more"></a>
-<h2 id="配置">配置</h2><p>设置了github 的deploy配置：</p>
-<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">deploy</span>:</span><br><span class="line">  <span class="attribute">type</span>: git</span><br><span class="line">  <span class="attribute">repo</span>: git<span class="variable">@github</span>.<span class="attribute">com</span>:fire3/fire3.github.io.git</span><br><span class="line">  <span class="attribute">branch</span>: master</span><br></pre></td></tr></table></figure>
-<p>但是CNAME却总是在deploy时删除。发现CNAME必须放在source目录下。</p>
-<h2 id="主题">主题</h2><p>采用这个漂亮的主题： <a href="https://github.com/iissnan/hexo-theme-next" target="_blank" rel="external">https://github.com/iissnan/hexo-theme-next</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git submodule add https://github.com/iissnan/hexo-theme-next themes/next</span><br></pre></td></tr></table></figure>
-<p>然后修改 _config.yml</p>
-<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">theme</span>: <span class="string">next</span></span><br></pre></td></tr></table></figure>
+          <h2 id="破解目的">破解目的</h2><p>目前在利用业余时间学习android app的开发，并初次接触到android的反汇编技术。好奇心作祟，想看看当前手机应用市场上，应用app平台相关的链接地址是如何产生的，so我选择了360手机助手作为学习对象-_-</p>
+<h2 id="破解过程">破解过程</h2><p>1）首先我们得建立一套破解调试环境（主要是想在里面加点自己的调试信息）<br>a）在电脑上下载360手机助手apk，并使用apktool对apk进行反编译，得到一个目录<br>     $ ls<br>     360box_web      360box_web-dex2jar.jar  build  signed<br>     360box_web.apk  360box_web-signed.apk   pack<br>b）在目录中建立两个目录build和signed<br>c）编写打包脚本，便于在手机上调试，打包脚本如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">adb shell pm uninstall com.qihoo.appstore</span><br><span class="line">apktool build <span class="number">360</span>box_web -o build/<span class="number">360</span>box_web.apk</span><br><span class="line">d2j-apk-sign.sh <span class="operator">-f</span> build/<span class="number">360</span>box_web.apk -o signed/<span class="number">360</span>box_web.apk</span><br><span class="line">adb install signed/<span class="number">360</span>box_web.apk</span><br></pre></td></tr></table></figure></p>
+<p>d）利用d2j-dex2jar.sh工具处理apk包生成jar文件，便于使用jd-gui来查看jar的代码</p>
+<p>2）查看了下反汇编得到的代码，发现代码是经过了混淆的，没法阅读。但因为我们的目的是想获取其相关的下载链接地址，所以我们可以在反汇编的代码中搜索一些关键字，这些关键字是不能被混淆的，如url，http之类的。<br>3）通过搜索url，我们发现了一个比较可以的包com/qihoo/appstore/resource/app/，该包的名字没有被混淆，应该是该apk比较重要的一个数据结构，打开jd-gui，查看该目录，发现该目录下存在一个名为App的类（经过混淆后，想找到该apk的一些重要信息，只能利用程序源的一些编程习惯去猜，而且有些在apk中常用的关键类是不能被混淆的，因此破解时可以从该处入手），既然发现一个名为app的类，仔细查看了下该类内部相关的一些接口函数，判断该类是该app中十分重要的一个数据结构，而且里面还存在toString这样的函数，该函数主要是打印该类中的重要数据，猜想应该是开发者留下来调试用的。为此我下一步的思路应该是在当应用执行时，在哪一条关键路径上将相关App类调用下toString这个接口，看看该类的重要数据是什么样的，指不定就有我们需要的东西-_-<br>4）采用暴力加打印的方法在app各个接口函数入口中增加如下类似打印：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">const-string v0, <span class="string">"hgy"</span></span><br><span class="line">const-string v1, <span class="string">"app abcd6"</span></span><br><span class="line">invoke-static &#123;v0, v1&#125;, Landroid/util/Log;-&gt;d(Ljava/lang/String;Ljava/lang/String;)I</span><br></pre></td></tr></table></figure></p>
+<p>5)使用pack打包在手机上执行，查看调试信息看看哪个接口函数被调用，并在被调用的函数中查找是否存在接口函数中有使用App类的。经过我们的查找发现接口函数by()存在直接使用App类的情况，我们在该接口的入口处直接添加toString的函数：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">const-string v0, <span class="string">"hgy"</span></span><br><span class="line">const-string v1, <span class="string">"app @@@@ !!!!!!!!!!"</span></span><br><span class="line">invoke-static &#123;v0, v1&#125;, Landroid/util/Log;-&gt;d(Ljava/lang/String;Ljava/lang/String;)I</span><br><span class="line">invoke-virtual &#123;p0&#125;, Lcom/qihoo/appstore/resource/app/App;-&gt;toString()Ljava/lang/String;</span><br><span class="line">move-result-object v1</span><br><span class="line">const-string v2, <span class="string">"app abcd aaaa"</span></span><br><span class="line">invoke-static &#123;v0, v2&#125;, Landroid/util/Log;-&gt;d(Ljava/lang/String;Ljava/lang/String;)I</span><br><span class="line">invoke-static &#123;v0, v1&#125;, Landroid/util/Log;-&gt;d(Ljava/lang/String;Ljava/lang/String;)I</span><br></pre></td></tr></table></figure></p>
+<p>6）打包执行，发现调试信息中果然出现了很多App相关的信息：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">D/hgy     ( <span class="number">4301</span>): App [id=<span class="number">2346093</span>, name=奔跑吧兄弟我是车神助手, baike_name=奔跑吧兄弟我是车神助手 Android_com.gl.wscs.gamestrategy, path=http://shouji.<span class="number">360</span>tpcdn.com/<span class="number">141121</span>/b540e872495ca6bf56973f6c040b4f64/com.gl.wscs.gamestrategy_2210.apk, version=<span class="number">2.2</span>.<span class="number">1</span>, versionCode=<span class="number">2210</span>, newFeature=, ApkId=com.gl.wscs.gamestrategy, date=, icon=http://p19.qhimg.com/t01247475d0f2f9c9a9.png, md5h=<span class="number">68</span>fec02557c3ee11e0f7bd5cf8bf7f10, rating=<span class="number">7</span>, downloadCount=<span class="number">168475</span>, size=<span class="number">500481</span>, categoryBrief=null, promote=, largeLogoUrl=null, isBigBanner=, categoryGroup=, category=, categoryCode=Apk, isSelected=<span class="literal">false</span>, softOrder=<span class="number">0</span>, lable=, marketId=, marketName=, mDownloadStatus=-<span class="number">2</span>, mCurrentBytes=<span class="number">0</span>, mTotalBytes=<span class="number">500481</span>, otherFlag=<span class="number">2</span>, mSavedPath=, downLine=<span class="number">0</span>, makeInstall=<span class="number">0</span>, installFailuerType=, mAppDetail=null, installedStatus=<span class="number">0</span>, bPackage=<span class="number">1</span>, time=-<span class="number">1</span>, msg=null, apkMD5=, wholeApkSize=<span class="number">0</span>, wholeApkUrl=bannerOpenUrl=nulltype=gameiswebgame=<span class="number">0</span>, minSdkVersion=<span class="number">8</span>]</span><br></pre></td></tr></table></figure></p>
+<p>7）破解结束，成功得到了包的下载地址-_-</p>
 
         
 
@@ -148,14 +143,6 @@
 
     
       <div class="post-footer">
-        
-          <div class="post-tags">
-            
-              <a href="/tags/hexo/">
-                #hexo
-              </a>
-            
-          </div>
         
 
         
@@ -170,8 +157,8 @@
   
     <div class="comments" id="comments">
       
-        <div class="ds-thread" data-thread-key="2015/03/04/hexo-first-day/"
-             data-title="折腾Hexo第一天" data-url="http://hgy.crixmod.com/2015/03/04/hexo-first-day/">
+        <div class="ds-thread" data-thread-key="2015/03/10/hack-360/"
+             data-title="破解360手机助手" data-url="http://hgy.crixmod.com/2015/03/10/hack-360/">
         </div>
 
       
@@ -237,7 +224,7 @@
 
     
       <div class="post-toc sidebar-panel-active">
-        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装"><span class="nav-number">1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置"><span class="nav-number">2.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主题"><span class="nav-number">3.</span> <span class="nav-text">主题</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#破解目的"><span class="nav-number">1.</span> <span class="nav-text">破解目的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#破解过程"><span class="nav-number">2.</span> <span class="nav-text">破解过程</span></a></li></ol>
       </div>
     
   </div>
